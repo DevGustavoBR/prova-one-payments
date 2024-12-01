@@ -17,10 +17,10 @@ class Produto
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 150, nullable: true)]
     #[Assert\NotBlank(message: "O nome do produto é obrigatório.")]
     #[Assert\Length(
-        max: 60,
+        max: 150,
         maxMessage: "O nome do produto deve ter no máximo {{ limit }} caracteres."
     )]
     private ?string $nome = null;
@@ -37,7 +37,7 @@ class Produto
     #[ORM\Column(type: 'text', nullable: true)]
     #[Assert\NotBlank(message: "A descrição é obrigatória.")]
     #[Assert\Length(
-        max: 1000,
+        max: 5000,
         maxMessage: "A descrição deve ter no máximo {{ limit }} caracteres."
     )]
     private ?string $descricao = null;
