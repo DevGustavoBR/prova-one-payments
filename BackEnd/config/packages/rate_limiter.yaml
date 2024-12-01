@@ -1,0 +1,10 @@
+framework:
+    rate_limiter:
+        produtos_criar:
+            policy: 'token_bucket'
+            limit: 5
+            interval: '1 minute'
+        produtos_atualizar:
+            policy: 'token_bucket'
+            limit: 10
+            interval: '1 minute'
