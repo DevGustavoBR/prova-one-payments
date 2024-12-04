@@ -17,10 +17,10 @@ class Produto
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 150, nullable: true)]
     #[Assert\NotBlank(message: "O nome do produto é obrigatório.")]
     #[Assert\Length(
-        max: 60,
+        max: 150,
         maxMessage: "O nome do produto deve ter no máximo {{ limit }} caracteres."
     )]
     private ?string $nome = null;
@@ -37,7 +37,7 @@ class Produto
     #[ORM\Column(type: 'text', nullable: true)]
     #[Assert\NotBlank(message: "A descrição é obrigatória.")]
     #[Assert\Length(
-        max: 1000,
+        max: 5000,
         maxMessage: "A descrição deve ter no máximo {{ limit }} caracteres."
     )]
     private ?string $descricao = null;
@@ -53,6 +53,24 @@ class Produto
     #[Assert\Url(message: "A URL da imagem é inválida.")]
     #[Assert\Callback([self::class, "validarImagemProduto"], groups: [])]
     private ?string $imagemProduto = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "A imagem é obrigatória.")]
+    #[Assert\Url(message: "A URL da imagem é inválida.")]
+    #[Assert\Callback([self::class, "validarImagemProduto"], groups: [])]
+    private ?string $imagemProduto2 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "A imagem é obrigatória.")]
+    #[Assert\Url(message: "A URL da imagem é inválida.")]
+    #[Assert\Callback([self::class, "validarImagemProduto"], groups: [])]
+    private ?string $imagemProduto3 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: "A imagem é obrigatória.")]
+    #[Assert\Url(message: "A URL da imagem é inválida.")]
+    #[Assert\Callback([self::class, "validarImagemProduto"], groups: [])]
+    private ?string $imagemProduto4 = null;
     public function validarImagemProduto(ExecutionContextInterface $contexto){
         if(!filter_var($this->imagemProduto, FILTER_VALIDATE_URL)) {
             $contexto->buildViolation("A URL da imagem é inválida.")->addViolation();
@@ -138,6 +156,42 @@ class Produto
     public function setImagemProduto(string $imagemProduto): static
     {
         $this->imagemProduto = $imagemProduto;
+
+        return $this;
+    }
+
+    public function getImagemProduto2(): ?string
+    {
+        return $this->imagemProduto2;
+    }
+
+    public function setImagemProduto2(?string $imagemProduto2): static
+    {
+        $this->imagemProduto2 = $imagemProduto2;
+
+        return $this;
+    }
+
+    public function getImagemProduto3(): ?string
+    {
+        return $this->imagemProduto3;
+    }
+
+    public function setImagemProduto3(?string $imagemProduto3): static
+    {
+        $this->imagemProduto3 = $imagemProduto3;
+
+        return $this;
+    }
+
+    public function getImagemProduto4(): ?string
+    {
+        return $this->imagemProduto4;
+    }
+
+    public function setImagemProduto4(?string $imagemProduto4): static
+    {
+        $this->imagemProduto4 = $imagemProduto4;
 
         return $this;
     }
