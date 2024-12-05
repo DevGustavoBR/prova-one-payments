@@ -24,7 +24,7 @@ class TransacaoController extends AbstractController
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);
 
 
-        $transacoes = $transacaoRepository->findAll();
+        $transacoes = $transacaoRepository->findBy([], ['id' => 'DESC']);
 
         if(!$transacoes) return $this->json([
            'status' => 404,
