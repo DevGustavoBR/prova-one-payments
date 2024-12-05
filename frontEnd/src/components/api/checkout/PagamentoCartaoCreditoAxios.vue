@@ -102,11 +102,14 @@ onMounted(apiTransacao);
             </div>
 
             <div class="text-center max-lg:hidden py-5">
-              <p>Atenção, é apenas uma simulação</p>
-              <p>utilize alguma plataforma para gerar os dados para cartão crédito válido, como a 4devs.com.br</p>
-              <p>não coloque seus dados reais aqui</p>
+              <ol>
+                <li>Atenção, é apenas uma simulação</li>
+                <li>Utilize alguma plataforma para gerar os dados para cartão de crédito válido, como a 4devs.com.br</li>
+                <li>Não coloque seus dados reais aqui</li>
+              </ol>
               <span></span>
             </div>
+
 
 
               <div class="py-5">
