@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import InputField from '@/components/InputField.vue';
 import ErrorComponent from '@/components/ErrorComponent.vue';
+import { urlAPi } from '../ApiUrl';
 
 const props = defineProps({
   transacaoId: {
@@ -22,13 +23,9 @@ const transacaoId = props.transacaoId;
 const apiTransacao = async () => {
   try{
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/transacao/${transacaoId}`);
+    const response = await axios.get(`${urlAPi}transacao/${transacaoId}`);
 
-    if(response.data.status === 404){
-
-      error.value = response.data.message;
-
-    }else{
+    if(response.data.status === 200){
 
       const data = response.data;
 
@@ -51,6 +48,12 @@ const apiTransacao = async () => {
         dataIncial:formatarDataHora(data.dados.createdAt),
         dataFinal: formatarDataHora(data.dados.updatedAt)
       }
+
+
+
+    }else{
+
+      error.value = response.data.message;
 
     }
 
