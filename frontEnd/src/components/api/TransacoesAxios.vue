@@ -26,6 +26,7 @@ const apiTransacoes = async () => {
 
         transacoes.value = data.dados.map(transacoes => ({
         id: transacoes.id,
+        cliente: transacoes.detalhes.cliente,
         idTransacao: transacoes.idTransacao,
         status: transacoes.status,
         dataPedido: formatarDataHora(transacoes.createdAt),
@@ -75,13 +76,16 @@ onMounted(apiTransacoes)
         ID Transação
       </th>
       <th class="p-4 text-left text-sm font-medium text-white">
+        Cliente
+      </th>
+      <th class="p-4 text-left text-sm font-medium text-white">
         Status
       </th>
       <th class="p-4 text-left text-sm font-medium text-white">
         Data Pedido
       </th>
       <th class="p-4 text-left text-sm font-medium text-white">
-        Actions
+       Ações
       </th>
     </tr>
   </thead>
@@ -93,6 +97,9 @@ onMounted(apiTransacoes)
       </td>
       <td class="p-4 text-sm text-black">
         {{  transacao.idTransacao}}
+      </td>
+      <td class="p-4 text-sm text-black">
+        {{  transacao.cliente}}
       </td>
       <td class="p-4 text-sm text-black">
         {{ transacao.status }}
