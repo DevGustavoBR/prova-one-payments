@@ -5,37 +5,19 @@ namespace App\Services;
 class SqlInjection 
 {
 
-    public function validarInput($input, string $type = 'string')
+    public function sanitizaInput(string $input): string
     {
-        // Verifica se o input não está vazio
-        if(empty($input)){
-           return false;   
-        }    
-
-         // Array de validações
-        $validarType = [
-           'string' => fn($input) => is_string($input),
-           'int' => fn($input) => is_int($input),
-           'email' => fn($input) => filter_var($input, FILTER_VALIDATE_EMAIL),
-           'url' => fn($input) => filter_var($input, FILTER_VALIDATE_URL),
-        ];
-
-        return isset($validarType[$type]) ? $validarType[$type]($input) : false;
-        
-    }
-
-
-    public function sanitizaInput(string $input)
-    {
-        // Remover tags HTML
-        $input = strip_tags($input);
-
-        // Usar filter_var para escapar caracteres especiais de uma maneira segura
-        // Caso precise sanitizar para prevenir XSS, use o filtro FILTER_SANITIZE_STRING
-        $input =  filter_var($input, FILTER_SANITIZE_STRING);
-
+        // Remover tags HTML e evitar a preservação de atributos perigosos
+        $input = strip_tags($input, '<b><i><u><strong><em>'); // Permite tags seguras, se necessário
+    
+        // Usar htmlspecialchars para escapar caracteres especiais de uma maneira segura
+        // O parâmetro ENT_QUOTES converte tanto aspas simples quanto duplas
+        // O parâmetro ENT_NOQUOTES mantém as aspas intactas, se necessário
+        $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+    
         return $input;
     }
+    
 
     public function sanitizaSqlInput(string $input)
     {

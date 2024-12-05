@@ -13,6 +13,7 @@ use Doctrine\DBAL\Exception as DBALException;
 use App\Entity\Transacao;
 use App\Repository\TransacaoRepository;
 use App\Services\GerarPix;
+use App\Services\SqlInjection;
 
 class TransacaoController extends AbstractController
 {
@@ -45,6 +46,11 @@ class TransacaoController extends AbstractController
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);
         if($this->verificaId($idTransacao) !== null) return $this->verificaId($idTransacao);
 
+        $input = new SqlInjection;
+
+        $idTransacao = $input->sanitizaInput($idTransacao);
+        $idTransacao = $input->sanitizaSqlInput($idTransacao);
+
         $transacao = $transacaoRepository->findOneBy(['idTransacao' => $idTransacao]);
 
         if(!$transacao) return $this->json([
@@ -71,11 +77,13 @@ class TransacaoController extends AbstractController
             $data = $request->request->all();
         }
 
+        $input = new SqlInjection;
+
         $detalhes = [
-          'cliente' => strip_tags($data['cliente']),
-          'produto' => strip_tags($data['produto']),
-          'valor'=> strip_tags($data['valor']),
-          'servico' => strip_tags($data['servico']),
+          'cliente' => $input->sanitizaInput($data['cliente']),
+          'produto' => $input->sanitizaInput($data['produto']),
+          'valor'=> $input->sanitizaInput($data['valor']),
+          'servico' => $input->sanitizaInput($data['servico']),
           'metodo_pagamento' => 'Cartão de Crédito',
         ];
 
@@ -117,6 +125,12 @@ class TransacaoController extends AbstractController
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         if($this->verificaId($idTransacao) !== null) return $this->verificaId($idTransacao);
 
+        $input = new SqlInjection;
+
+        $idTransacao = $input->sanitizaInput($idTransacao);
+        $idTransacao = $input->sanitizaSqlInput($idTransacao);
+
+
         $transacao = $entityManager->getRepository(Transacao::class)->findOneBy(['idTransacao' => $idTransacao]);
 
         if(!$transacao) return $this->json([
@@ -149,9 +163,9 @@ class TransacaoController extends AbstractController
         $cartaoCredito = new CartaoCredito;
 
 
-        $numero = $data['cartao'];
-        $validade = $data['validade'];
-        $cvv = $data['cvv'];
+        $numero = $input->sanitizaInput($data['cartao']);
+        $validade = $input->sanitizaInput($data['validade']);
+        $cvv = $input->sanitizaInput($data['cvv']);
 
         $erros = [];
 
@@ -217,11 +231,13 @@ class TransacaoController extends AbstractController
             $data = $request->request->all();
         }
 
+        $input = new SqlInjection;
+
         $detalhes = [
-          'cliente' => strip_tags($data['cliente']),
-          'produto' => strip_tags($data['produto']),
-          'valor'=> strip_tags($data['valor']),
-          'servico' => strip_tags($data['servico']),
+          'cliente' => $input->sanitizaInput($data['cliente']),
+          'produto' => $input->sanitizaInput($data['produto']),
+          'valor'=> $input->sanitizaInput($data['valor']),
+          'servico' => $input->sanitizaInput($data['servico']),
           'metodo_pagamento' => 'PIX',
           'chave_pix' => 'f8c9d949-5872-4af7-a0ae-0ff6db529251',          
           'descricao_pix' => 'Pagamento Via Pix', 
@@ -280,6 +296,11 @@ class TransacaoController extends AbstractController
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);
         if($this->verificaId($idTransacao) !== null) return $this->verificaId($idTransacao);
 
+        $input = new SqlInjection;
+
+        $idTransacao = $input->sanitizaInput($idTransacao);
+        $idTransacao = $input->sanitizaSqlInput($idTransacao);
+
         $transacao = $entityManager->getRepository(Transacao::class)->findOneBy(['idTransacao' => $idTransacao]);
 
         if(!$transacao) return $this->json([
@@ -333,12 +354,14 @@ class TransacaoController extends AbstractController
             $data = $request->request->all();
         }
 
+        $input = new SqlInjection;
+
         $cartaoCredito = new CartaoCredito;
 
 
-        $numero = $data['cartao'];
-        $validade = $data['validade'];
-        $cvv = $data['cvv'];
+        $numero = $input->sanitizaInput($data['cartao']);
+        $validade = $input->sanitizaInput($data['validade']);
+        $cvv = $input->sanitizaInput($data['cvv']);
 
         $erros = [];
 

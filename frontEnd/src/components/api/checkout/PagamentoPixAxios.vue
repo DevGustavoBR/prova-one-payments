@@ -93,8 +93,10 @@ onMounted(apiTransacao);
 
 
             <div class="text-center max-lg:hidden py-5">
-              <p>Atenção, é apenas uma simulação</p>
-              <p>Essa chave e Qrcode não funcionam, está apenas para simular o metodo de pagamento 'PIX'</p>
+              <ol>
+                <li>Atenção, é apenas uma simulação</li>
+                <li>Essa chave e Qrcode não funcionam, está apenas para simular o metodo de pagamento 'PIX'</li>
+              </ol>
               <span></span>
             </div>
 
