@@ -3,6 +3,8 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import ErrorComponent from '@/components/ErrorComponent.vue';
+import { urlAPi } from '../ApiUrl';
+
 
 const props = defineProps({
   produtoId: {
@@ -22,6 +24,7 @@ const produto = ref({
 });
 
 const loading = ref(true);
+const error = ref(null);
 
 const idProduto = props.produtoId
 
@@ -30,7 +33,7 @@ const url = `/checkout/metodo-pagamento/${idProduto}`;
 const apiProduto = async () =>{
 
   try{
-    const response = await axios.get(`http://127.0.0.1:8000/api/produtos/${idProduto}`);
+    const response = await axios.get(`${urlAPi}produtos/${idProduto}`);
 
     if(response.data.status === 200){
       const data = response.data.data;
@@ -47,10 +50,12 @@ const apiProduto = async () =>{
       }
     }else{
        console.error(`Error ${response.data.status}: ${response.data.message}`);
+       error.value = response.data.message;
     }
 
-  }catch(error){
-    console.log("Erro ao buscar o produto:", error);
+  }catch(err){
+    error.value = "Erro ao buscar o produto:";
+    console.log(err);
   }finally{
     loading.value = false;
   }

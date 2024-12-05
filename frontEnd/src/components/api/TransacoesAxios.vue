@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import ErrorComponent from '@/components/ErrorComponent.vue';
+import { urlAPi } from '../ApiUrl';
 
 const transacoes = ref([]);
 const loading = ref(true);
@@ -11,14 +12,10 @@ const apiTransacoes = async () => {
 
   try{
 
-    const response = await axios.get('http://127.0.0.1:8000/api/transacoes');
+    const response = await axios.get(`${urlAPi}transacoes`);
     const data = response.data;
 
-    if(data.status === 404){
-        console.error(data.message);
-        error.value = data.message;
-    }else{
-
+    if(data.status === 200){
       const formatarDataHora = (dataISO) => {
         const data = new Date(dataISO);
         return new Intl.DateTimeFormat('pt-BR', {
@@ -34,6 +31,11 @@ const apiTransacoes = async () => {
         dataPedido: formatarDataHora(transacoes.createdAt),
         href: `/transacao/${transacoes.idTransacao}`
        }));
+
+    }else{
+      console.error(data.message);
+      error.value = data.message;
+
     }
 
   }catch(err){

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import BotaoProcessarPagamentoAxios from '../BotaoProcessarPagamentoAxios.vue';
 import ErrorComponent from '@/components/ErrorComponent.vue';
+import { urlAPi } from '../../ApiUrl';
 
 import {cartao, validade, cvv, erros, validaFormulario, mascaraCartao, mascaraData, mascaraCVV } from '../../ValidadarCartao'
 
@@ -31,18 +32,14 @@ const verificarFormulario = () => {
 
 watch([cartao, validade, cvv], verificarFormulario);
 
-const url = `http://127.0.0.1:8000/api/transacao/processar/pagamento/cartao-credito/${transacaoId}`
+const url = `${urlAPi}transacao/processar/pagamento/cartao-credito/${transacaoId}`
 
 const apiTransacao = async () => {
   try{
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/transacao/${transacaoId}`);
+    const response = await axios.get(`${urlAPi}transacao/${transacaoId}`);
 
-    if(response.data.status === 404){
-
-      error.value = response.data.message;
-
-    }else{
+    if(response.data.status === 200){
 
       const data = response.data;
 
@@ -64,6 +61,9 @@ const apiTransacao = async () => {
         metodo_pagamento: data.dados.detalhes.metodo_pagamento,
       }
 
+    }else{
+
+      error.value = response.data.message;
 
 
     }

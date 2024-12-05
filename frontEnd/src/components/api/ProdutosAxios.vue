@@ -1,18 +1,21 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { urlAPi } from '../ApiUrl';
+import ErrorComponent from '@/components/ErrorComponent.vue';
 
 const produtos =  ref([]);
+const loading = ref(true);
+const error = ref(null);
 
 
 const apiProdutos = async () => {
   try{
-     const response = await axios.get(' http://127.0.0.1:8000/api/produtos');
+     const response = await axios.get(`${urlAPi}produtos`);
      const data = response.data;
 
-      if(data.status === 404){
-          console.error(data.message);
-      }else{
+      if(data.status === 200){
+
           produtos.value = data.data.map(produtos => ({
             id: produtos.id,
             href: `/produto/${produtos.id}`,
@@ -22,10 +25,16 @@ const apiProdutos = async () => {
             imagem: produtos.imagemProduto,
             imagemAlt: `Imagem de ${produtos.nome}`,
           }));
+      }else{
+        console.error(data.message);
+        error.value = response.data.message;
       }
 
   }catch(error){
-    console.log("Erro ao buscar os produtos:", error);
+    console.log(error);
+    error.value = "Erro ao buscar produtos.";
+  }finally{
+    loading.value = false;
   }
 }
 
@@ -37,8 +46,9 @@ onMounted(apiProdutos)
 
 <template>
 
+<ErrorComponent :error="error"/>
 
-  <div class="font-[sans-serif] ">
+  <div v-if="!error" class="font-[sans-serif] ">
       <div class="p-4 mx-auto lg:max-w-7xl sm:max-w-full">
         <h2 class="text-4xl font-extrabold text-gray-800 mb-12">Produtos</h2>
 

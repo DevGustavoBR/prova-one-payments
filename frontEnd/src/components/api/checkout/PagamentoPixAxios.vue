@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import BotaoProcessarPagamentoAxios from '../BotaoProcessarPagamentoAxios.vue';
 import ErrorComponent from '@/components/ErrorComponent.vue';
+import { urlAPi } from '../../ApiUrl';
 
 const props = defineProps({
   transacaoId: {
@@ -18,19 +19,16 @@ const error = ref(null);
 const router = useRouter();
 
 const transacaoId = props.transacaoId;
-const url = `http://127.0.0.1:8000/api/transacao/processar/pagamento/pix/${props.transacaoId}`;
+const url = `${urlAPi}transacao/processar/pagamento/pix/${props.transacaoId}`;
 
 const apiTransacao = async () => {
   try{
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/transacao/${transacaoId}`);
+    const response = await axios.get(`${urlAPi}transacao/${transacaoId}`);
 
-    if(response.data.status === 404){
+    if(response.data.status === 200){
 
-      error.value = response.data.message;
-      return;
 
-    }else{
 
       const data = response.data;
 
@@ -55,6 +53,11 @@ const apiTransacao = async () => {
         qr_code: data.dados.detalhes.qr_code
       }
 
+    }else{
+
+
+      error.value = response.data.message;
+      return;
 
 
     }

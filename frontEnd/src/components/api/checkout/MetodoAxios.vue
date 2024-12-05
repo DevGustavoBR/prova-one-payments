@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import BotaoAxios from '../BotaoAxios.vue';
 import InputField from '@/components/InputField.vue';
+import { urlAPi } from '../../ApiUrl';
+import ErrorComponent from '@/components/ErrorComponent.vue';
 
 
 const props = defineProps({
@@ -21,10 +23,14 @@ const produto = ref({
   const idProduto = props.produtoId;
 
   const loading = ref(true);
+  const error = ref(null);
+
+  const urlPix = `${urlAPi}transacao/pagamento/criar/pix`;
+  const urlCartaCredito = `${urlAPi}transacao/pagamento/criar/cartao-credito`;
 
   const apiProduto = async () => {
     try{
-        const response = await axios.get(`http://127.0.0.1:8000/api/produtos/${idProduto}`)
+        const response = await axios.get(`${urlAPi}produtos/${idProduto}`)
         if(response.data.status === 200){
           const data = response.data.data;
 
@@ -40,10 +46,12 @@ const produto = ref({
         servico: `Compra do produto ${produto.value.nome}`,
       };
         }else{
-          console.error(`Error ${response.data.status}: ${response.data.message}`);
+          error.value = response.data.message;
         }
     }catch(error){
-      console.log("Erro ao buscar o produto:", error);
+      error.value = "Erro ao buscar produto.";
+      console.log(error);
+
     }finally{
       loading.value = false;
     }
@@ -91,7 +99,10 @@ const validarNomeCliente = () => {
 </script>
 
 <template>
-<div class="font-[sans-serif] bg-white">
+
+<ErrorComponent :error="error"/>
+
+<div v-if="!error" class="font-[sans-serif] bg-white">
       <div class="max-lg:max-w-xl mx-auto w-full">
         <div class="grid lg:grid-cols-3 gap-6">
           <div class="lg:col-span-2 max-lg:order-1 p-6 !pr-0 max-w-4xl mx-auto w-full">
@@ -153,7 +164,7 @@ const validarNomeCliente = () => {
 
               <div class="flex flex-wrap gap-4 mt-8">
                 <BotaoAxios
-                url="http://127.0.0.1:8000/api/transacao/pagamento/criar/pix"
+                :url="urlPix"
                 label="PIX"
                 :data="formData"
                 :buttonClass="'min-w-[150px] px-6 py-3.5 text-sm bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300'"
@@ -161,7 +172,7 @@ const validarNomeCliente = () => {
                 />
 
               <BotaoAxios
-               url = "http://127.0.0.1:8000/api/transacao/pagamento/criar/cartao-credito"
+               :url = "urlCartaCredito"
                label="Cartão de Credito"
                :data="formData"
                :buttonClass="'min-w-[150px] px-6 py-3.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700'"
