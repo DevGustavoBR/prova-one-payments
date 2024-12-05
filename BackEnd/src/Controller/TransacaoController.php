@@ -102,7 +102,7 @@ class TransacaoController extends AbstractController
             ]);
         }catch(ORMException | DBALException $e){
             return $this->json([
-                'status' => '500',
+                'status' => 500,
                 'message' => 'Erro ao gerar link de pagamento para cartão de crédito',
                 'error' => $e->getMessage()
                ]);
