@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ProdutoRepository;
+use App\Services\SqlInjection;
 
 class ProdutoController extends AbstractController
 {
@@ -40,6 +41,11 @@ class ProdutoController extends AbstractController
 
         $validacao = $this->validarRequest($request, $id);
         if ($validacao !== null) return $validacao;
+
+        $input = new SqlInjection;
+
+        $id = $input->sanitizaInput($id);
+        $id = $input->sanitizaSqlInput($id);
 
         $produto = $produtoRepository->find($id);
 
