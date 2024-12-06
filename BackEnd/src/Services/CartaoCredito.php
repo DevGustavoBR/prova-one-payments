@@ -1,6 +1,6 @@
 <?php 
 
-namespace BackEnd\Src\Services;
+namespace App\Services;
 
 class CartaoCredito 
 {
