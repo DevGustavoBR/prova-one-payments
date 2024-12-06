@@ -5,6 +5,15 @@ framework:
     # Sessões ativadas, se necessário
     session: true
 
+     # Ativando o Rate Limiter
+    rate_limiter:
+        enabled: true
+        limiters:
+            api:
+                policy: 'sliding_window' # Política de limite (sliding_window ou fixed_window)
+                limit: 100               # Máximo de requisições permitidas
+                interval: '1 minute'     # Intervalo de tempo
+
 # Configuração de teste, se necessário
 when@test:
     framework:
