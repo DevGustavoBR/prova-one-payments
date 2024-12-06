@@ -14,12 +14,22 @@ use App\Entity\Transacao;
 use App\Repository\TransacaoRepository;
 use App\Services\GerarPix;
 use App\Services\SqlInjection;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 class TransacaoController extends AbstractController
 {
     #[Route('/transacoes', name: 'transacoes', methods:['GET'])]
-    public function transacoes(Request $request, TransacaoRepository $transacaoRepository): JsonResponse
+    public function transacoes(Request $request, TransacaoRepository $transacaoRepository, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);
@@ -39,8 +49,17 @@ class TransacaoController extends AbstractController
     }
 
     #[Route('/transacao/{idTransacao}', name: 'transacao_id', methods:['GET'])]
-    public function transacao(string $idTransacao,Request $request, TransacaoRepository $transacaoRepository): JsonResponse
+    public function transacao(string $idTransacao,Request $request, TransacaoRepository $transacaoRepository, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);
@@ -66,8 +85,17 @@ class TransacaoController extends AbstractController
 
 
     #[Route('/transacao/pagamento/criar/cartao-credito', name: 'transacao_criar_pagamento_cartao', methods:['POST'])]
-    public function criarPagamentoCartao(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function criarPagamentoCartao(Request $request, EntityManagerInterface $entityManager, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         
@@ -119,8 +147,18 @@ class TransacaoController extends AbstractController
 
 
     #[Route('/transacao/processar/pagamento/cartao-credito/{idTransacao}', name: 'transacao_pagamento_cartao', methods:['PUT', 'PATCH'])]
-    public function processarPagamentoCartao(string $idTransacao, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function processarPagamentoCartao(string $idTransacao, Request $request, EntityManagerInterface $entityManager, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
+
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         if($this->verificaId($idTransacao) !== null) return $this->verificaId($idTransacao);
@@ -219,8 +257,17 @@ class TransacaoController extends AbstractController
 
 
     #[Route('/transacao/pagamento/criar/pix', name: 'transacao_criar_pix', methods:['POST'])]
-    public function criarPix(Request $request, EntityManagerInterface $entityManager) : JsonResponse
+    public function criarPix(Request $request, EntityManagerInterface $entityManager, RateLimiterFactory $apiLimiter) : JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         
@@ -289,8 +336,17 @@ class TransacaoController extends AbstractController
     
 
     #[Route('/transacao/processar/pagamento/pix/{idTransacao}', name: 'transacao_pagamento_pix', methods:['PUT', 'PATCH'])]
-    public function processarPagamentoPix(string $idTransacao,Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function processarPagamentoPix(string $idTransacao,Request $request, EntityManagerInterface $entityManager, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         if($this->verificaQueryString($request) !== null) return $this->verificaQueryString($request);
         if($this->verificaDadosCorpo($request) !== null) return $this->verificaDadosCorpo($request);

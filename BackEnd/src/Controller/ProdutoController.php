@@ -9,15 +9,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ProdutoRepository;
 use App\Services\SqlInjection;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 class ProdutoController extends AbstractController
 {
     #[Route('/produtos', name: 'produtos_lista', methods: ['GET'])]
-    public function index(ProdutoRepository $produtoRepository, Request $request): JsonResponse
+    public function index(ProdutoRepository $produtoRepository, Request $request, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         $validacao = $this->validarRequest($request);
         if ($validacao !== null) return $validacao;
+
 
 
         $dados = $produtoRepository->findAll();
@@ -36,8 +47,17 @@ class ProdutoController extends AbstractController
 
 
     #[Route('/produtos/{id}', name: 'produtos_id', methods: ['GET'])]
-    public function produto(int $id,Request $request, ProdutoRepository $produtoRepository): JsonResponse
+    public function produto(int $id,Request $request, ProdutoRepository $produtoRepository, RateLimiterFactory $apiLimiter): JsonResponse
     {
+
+        $limiter = $apiLimiter->create($request->getClientIp());
+
+        if(false === $limiter->consume(1)->isAccepted()){
+            return $this->json([
+            'status' => 429,
+            'message' => 'Você excedeu o limite de requisições. Tente novamente mais tarde.'
+            ]);
+          }
 
         $validacao = $this->validarRequest($request, $id);
         if ($validacao !== null) return $validacao;
