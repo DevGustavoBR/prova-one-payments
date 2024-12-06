@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use BackEnd\Src\Services\CartaoCredito;
+use App\Services\CartaoCredito;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
